@@ -30,8 +30,32 @@
 # Bonus Extra Credit
 # this will not have you setting up a complete image useful for local development, test, and prod
 # it's just meant to get you started with basic Dockerfile concepts and not focus too much on
-# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then 
-# after you get through more of this course, you should come back and use my 
-# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for 
+# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then
+# after you get through more of this course, you should come back and use my
+# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for
 # better local development with more advanced topics
 # https://github.com/BretFisher/node-docker-good-defaults
+
+
+FROM node:6-alpine
+EXPOSE 3000 80
+# ENV TINI_SUBREAPER
+# a priori je suis ici  : /Users/ab186131/tmp/docker/udemy/udemy-docker-mastery/dockerfile-assignment-1
+
+
+
+# Dans l'image ik y a  CMD ["/bin/sh"] donc a priori j'ai deja le bacth.
+# RUN /bin/sh -c apk add --update tini --verbose
+RUN apk add --update tini --verbose
+RUN mkdir -p /usr/src/app/
+WORKDIR /usr/src/app/
+
+COPY package.json /usr/src/app/
+# RUN cd /usr/src/app/
+RUN npm install
+RUN npm cache clean --force
+
+# COPY * /usr/src/app/
+COPY . .
+
+CMD /sbin/tini -- node ./bin/www -s

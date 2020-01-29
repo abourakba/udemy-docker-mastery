@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+# Deinfition de postgres
+  pgdb:
+    image: postgres:11.6-alpine
+    environment:
+      POSTGRES_DB: drupal
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    networks:
+      - drupalnet
+# definition de Drupal
+  drupalserv:
+    image: drupal:8.8.1
+    ports:
+      - "8080:80"
+    depends_on:
+      - pgdb
+    networks:
+      - drupalnet
+# Volume ??? Je ne pense pas qu'il y  ait besoin de
+# Networks
+networks:
+  drupalnet:
+    driver: bridge
